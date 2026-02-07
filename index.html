@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti 💘</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background: url('fondo.jpg') no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 90%;
+        position: relative;
+        z-index: 10;
+    }
+
+    .sticker1 {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 100px;
+        transform: rotate(15deg); 
+        z-index: 5;
+    }
+
+    h1 { font-family: 'Special Elite', serif; color: #a64444; }
+
+    button {
+        padding: 14px 24px;
+        margin: 10px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        font-family: 'Special Elite', serif;
+    }
+
+    .yes { background: #a64444; color: white; transition: transform 0.2s; }
+    
+    .no { 
+        background: #adb5bd; 
+        color: white; 
+        transition: all 0.2s ease;
+        position: relative; 
+    }
+
+    .option {
+        display: block;
+        margin: 10px auto;
+        padding: 12px;
+        border-radius: 10px;
+        background: #f8f1f1;
+        border: 1px dashed #a64444;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .invoice {
+        font-family: 'Special Elite', monospace;
+        text-align: left;
+        border-top: 2px dashed #333;
+        margin-top: 15px;
+        padding-top: 15px;
+        position: relative;
+    }
+
+    .sticker2 {
+        width: 70px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transform: rotate(10deg);
+    }
+
+    input {
+        padding: 10px;
+        margin: 5px 0;
+        width: 80%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+</style>
+</head>
+<body>
+
+<audio id="music" src="tangerine-damiano-david.mp3" autoplay loop></audio>
+<img src="sticker1.png" class="sticker1">
+
+<div class="card" id="app">
+    <h1 id="titulo">¿Quieres ser mi San Valentín? 💕</h1>
+    <button class="yes" id="yesBtn" onclick="aceptar()">Sí 💖</button>
+    <button class="no" id="noBtn" onclick="rechazar()">No 🙃</button>
+</div>
+
+<script>
+let noCount = 0;
+let cita = {};
+
+const textosNo = ["¿Segura? 🥺", "Piénsalo bien...", "No tan rápido 🛑", "¡Di que sí! 🙏", "¡Ups! Casi 😜", "¿En serio? 🙃"];
+const textosSi = ["Sí 💖", "¡Obvio!", "Acepto 🥰", "¡Vamos!", "¡CLARO QUE SÍ!"];
+
+function rechazar() {
+    noCount++;
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+
+    noBtn.innerText = textosNo[Math.min(noCount, textosNo.length - 1)];
+    yesBtn.innerText = textosSi[Math.min(noCount, textosSi.length - 1)];
+
+    let rotacion = noCount * 20; 
+    let escalaNo = Math.max(0.4, 1 - noCount * 0.1);
+    let escalaYes = 1 + noCount * 0.3;
+
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.transform = `scale(${escalaNo}) rotate(${rotacion}deg)`;
+    
+    yesBtn.style.transform = `scale(${escalaYes})`;
+}
+
+function aceptar() {
+    document.getElementById("music").play();
+
+    document.getElementById("app").innerHTML = `
+        <h1>¿Qué plan prefieres? 📍</h1>
+        <div class="option" onclick="guardarPlan('senderismo ⛰️')">opcion 1) senderismo</div>
+        <div class="option" onclick="guardarPlan('ver peliculas y dormirnos y jugar algun juego online 🎮')">opcion 2) ver peliculas y dormirnos y jugar algun juego online</div>
+        <div class="option" onclick="guardarPlan('no hacer nada porque no me amas 💔')">opcion 3) no hacer nada porque no me amas</div>
+    `;
+}
+
+function guardarPlan(p) {
+    cita.plan = p;
+    document.getElementById("app").innerHTML = `
+        <h1>¿Qué comeremos? 🍕</h1>
+        <div class="option" onclick="guardarComida('sushi 🍣')">opcion 1) sushi</div>
+        <div class="option" onclick="guardarComida('pizza 🍕')">opcion 2) pizza</div>
+        <div class="option" onclick="guardarComida('hamburguesa 🍔')">opcion 3) hamburguesa</div>
+    `;
+}
+
+function guardarComida(c) {
+    cita.comida = c;
+    document.getElementById("app").innerHTML = `
+        <h1>¿Día y Hora?</h1>
+        <input type="date" id="fecha"><br>
+        <input type="time" id="hora"><br>
+        <button class="yes" onclick="confirmar()">Confirmar cita 🧾</button>
+    `;
+}
+
+function confirmar() {
+    cita.fecha = document.getElementById("fecha").value || "14/02/2026";
+    cita.hora = document.getElementById("hora").value || "20:00";
+
+    document.getElementById("app").innerHTML = `
+        <div class="invoice">
+            <h3 style="text-align:center">FACTURA DE CITA</h3>
+            <p><strong>PLAN:</strong> ${cita.plan}</p>
+            <p><strong>MENÚ:</strong> ${cita.comida}</p>
+            <p><strong>FECHA:</strong> ${cita.fecha}</p>
+            <p><strong>HORA:</strong> ${cita.hora}</p>
+            <p style="border-top: 1px solid #000; padding-top:10px;"><strong>TOTAL:</strong> Tu compañía</p>
+            <img src="sticker2.png" class="sticker2">
+        </div>
+        <button class="yes" onclick="window.print()">Imprimir Recuerdo 💖</button>
+    `;
+}
+</script>
+</body>
+</html>
